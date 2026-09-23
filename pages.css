@@ -1,0 +1,5 @@
+#transport-status{width:min(980px,calc(100% - 44px));margin:18px auto;font-size:14px;color:var(--secondary)}
+#transport-status:empty{display:none}
+.skip-link{position:absolute;left:20px;top:-100px;z-index:30;background:var(--page);padding:8px 16px}
+.skip-link:focus{top:4px}
+main[aria-busy="true"]{opacity:.65}button:disabled{cursor:wait;opacity:.6}
