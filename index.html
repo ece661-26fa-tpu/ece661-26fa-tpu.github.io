@@ -175,6 +175,8 @@ ece661 ssh-key add ~/.ssh/id_ed25519.pub</code></pre>
         <tr><td><code>ece661 compute start</code></td><td>Starts a TPU session. See the flags below.</td></tr>
         <tr><td><code>ece661 compute list</code></td><td>Lists your sessions</td></tr>
         <tr><td><code>ece661 compute stop ID</code></td><td>Stops a session</td></tr>
+        <tr><td><code>ece661 update</code></td><td>Installs the newest version of the command</td></tr>
+        <tr><td><code>ece661 update --check</code></td><td>Reports whether a newer version is out</td></tr>
         <tr><td><code>ece661 --version</code></td><td>Prints the installed version</td></tr>
       </tbody>
     </table></div>
@@ -187,6 +189,12 @@ ece661 ssh-key add ~/.ssh/id_ed25519.pub</code></pre>
         <tr><td><code>-y</code>, <code>--yes</code></td><td>Off</td><td>Reserves without the confirmation prompt</td></tr>
       </tbody>
     </table></div>
+    <h2 id="update">Updating</h2>
+    <p>The command checks for a new version once a day. When one is out, it prints a notice after your command finishes.</p>
+    <pre data-lang="Shell"><code>ece661 update</code></pre>
+    <p>This downloads the course installer and runs it again. Your saved key and SSH settings stay in place. Run <code>ece661 update --check</code> to see if a new version is out without installing it.</p>
+    <p>If the update fails, it prints the install command. Run that command to reinstall by hand.</p>
+    <p>To turn off the daily check, set <code>ECE661_NO_UPDATE_CHECK=1</code> in your shell profile.</p>
   </template>
 
   <template id="doc-tpu">
