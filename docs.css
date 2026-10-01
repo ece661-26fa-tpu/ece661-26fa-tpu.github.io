@@ -1,7 +1,7 @@
-/* Documentation pages (#/docs/...). Same tokens as portal.css: one ink, one blue, SF system stack,
-   hairlines. Layout: sidebar, content column, and an on-page table of contents at wide widths. */
-body.docs-mode .masthead > div, body.docs-mode footer > div { width: min(1280px, calc(100% - 44px)); }
-main.docs-main { width: min(1280px, calc(100% - 44px)); padding-block: 0 64px; }
+/* Documentation layout (#/docs/...): sidebar, content column, and an on-page table of contents at
+   wide widths. Type, headings, tables, code blocks and callouts come from portal.css, which every
+   tab shares. Only docs-specific layout lives here. */
+main.docs-main { padding-block: 0 64px; }
 .docs-layout {
   display: grid; grid-template-columns: 232px minmax(0, 1fr) 200px; gap: 48px; align-items: start;
 }
@@ -35,64 +35,24 @@ nav.docs-sidebar {
 .docs-toc a:hover { color: var(--ink); text-decoration: none; }
 
 /* Content */
-.docs-content { max-width: 760px; padding-top: 40px; min-width: 0; }
-.docs-kicker { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: var(--link); }
-.docs-content h1 { margin: 0 0 10px; font-size: 36px; line-height: 1.12; letter-spacing: -0.015em; }
-.docs-intro { margin: 0 0 8px; font-size: 19px; line-height: 1.42; color: var(--secondary); }
+.docs-content { max-width: var(--prose); padding-top: 40px; min-width: 0; }
 .docs-content h2 {
-  margin: 40px 0 12px; padding-top: 24px; border-top: 1px solid var(--hairline);
-  font-size: 24px; line-height: 1.2; scroll-margin-top: 64px;
+  margin: 40px 0 12px; padding-top: 24px; border-top: 1px solid var(--hairline); scroll-margin-top: 64px;
 }
 .docs-content h1 + .docs-intro + h2 { margin-top: 32px; }
 .heading-anchor { margin-left: 8px; color: var(--secondary); font-weight: 400; opacity: 0; }
 .docs-content h2:hover .heading-anchor, .heading-anchor:focus-visible { opacity: 1; text-decoration: none; }
-.docs-content ul, .docs-content ol { margin: 0 0 14px; padding-left: 22px; }
-.docs-content li { margin-bottom: 6px; }
 .docs-steps > li { margin-bottom: 14px; padding-left: 4px; }
 .docs-steps > li > p { margin-bottom: 8px; }
-.docs-content :not(pre) > code {
-  padding: 1px 6px; font-size: 0.86em; background: var(--surface); border-radius: 6px;
-  overflow-wrap: anywhere;
-}
 .docs-content td:first-child code { white-space: nowrap; }
 .docs-content .table-scroll { margin: 12px 0 20px; }
-.docs-content table { font-size: 15px; }
-.docs-content th, .docs-content td { padding: 12px 16px 12px 0; }
-.docs-content th:last-child, .docs-content td:last-child { padding-right: 0; }
-
-/* Code blocks: language label and a copy button over the dark block the portal already uses. */
-.code-block { margin: 12px 0 20px; border-radius: 12px; overflow: hidden; background: var(--ink); }
-.code-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 6px 8px 6px 16px; background: #2c2c2e; color: #a1a1a6; font-size: 12px;
-}
-.code-lang { font-weight: 600; letter-spacing: 0.02em; }
-button.code-copy {
-  min-height: 28px; padding: 0 12px; font-size: 12px; color: #f5f5f7; background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 6px;
-}
-button.code-copy:hover { color: #fff; background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.4); }
-.code-block pre {
-  margin: 0; padding: 14px 16px; overflow-x: auto; color: #f5f5f7; line-height: 1.6;
-}
-.code-block pre code { font-size: 13px; white-space: pre; }
-.code-block pre:focus-visible { outline-offset: -4px; }
-
-/* Callouts */
-.callout { margin: 16px 0 20px; padding: 12px 16px; border-left: 3px solid; border-radius: 8px; font-size: 15px; }
-.callout p { margin: 0 0 6px; }
-.callout p:last-child { margin-bottom: 0; }
-.callout-title { font-weight: 600; font-size: 14px; }
-.callout.note { border-color: var(--blue); background: rgba(0, 113, 227, 0.06); }
-.callout.warning { border-color: #b25000; background: #fff6e8; }
-.callout.warning .callout-title { color: #8a3d00; }
 
 /* Previous and next */
 nav.docs-pager {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 56px; font-size: 16px;
 }
 .docs-pager a {
-  display: block; padding: 14px 18px; border: 1px solid var(--hairline); border-radius: 12px;
+  display: block; padding: 14px 18px; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--card);
   white-space: normal;
 }
 .docs-pager a:hover { border-color: var(--link); text-decoration: none; }
@@ -105,8 +65,6 @@ nav.docs-pager {
   .docs-toc { display: none; }
 }
 @media (max-width: 860px) {
-  main.docs-main { width: calc(100% - 32px); }
-  body.docs-mode .masthead > div, body.docs-mode footer > div { width: calc(100% - 32px); }
   .docs-layout { display: block; }
   button.docs-menu {
     display: flex; width: 100%; justify-content: space-between; gap: 12px; margin-top: 16px;
@@ -124,15 +82,11 @@ nav.docs-pager {
   }
   nav.docs-sidebar.open { display: block; }
   .docs-content { padding-top: 24px; }
-  .docs-content h1 { font-size: 30px; }
-  .docs-intro { font-size: 17px; }
-  .docs-content h2 { font-size: 21px; margin-top: 40px; }
+  .docs-content h2 { margin-top: 40px; }
   .heading-anchor { display: none; }
-  .docs-content table { font-size: 14px; }
   .docs-content td:first-child code { white-space: normal; overflow-wrap: anywhere; }
   .docs-content td:first-child { min-width: 7.5em; }
   .docs-steps { padding-left: 20px; }
-  .code-block pre { padding: 12px 14px; }
   nav.docs-pager { grid-template-columns: 1fr; }
   .docs-pager-next { grid-column: 1; }
 }

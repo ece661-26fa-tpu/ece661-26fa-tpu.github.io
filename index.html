@@ -57,9 +57,7 @@
         <pre data-lang="Shell"><code>export ECE661_API_KEY="your course key"</code></pre>
       </li>
       <li>
-        <p>List the models you can call.</p>
-        <pre data-lang="Shell"><code>curl <span data-docs="origin">https://&lt;host&gt;</span>/api/v1/models \
-  -H "Authorization: Bearer $ECE661_API_KEY"</code></pre>
+        <p>See the models you can call on your <a href="#/">My usage</a> page.</p>
       </li>
       <li>
         <p>Install the <code>ece661</code> command.</p>
@@ -136,6 +134,7 @@ print(response.choices[0].message.content)</code></pre>
     <p>List the models your key can call.</p>
     <pre data-lang="Shell"><code>curl <span data-docs="origin">https://&lt;host&gt;</span>/api/v1/models \
   -H "Authorization: Bearer $ECE661_API_KEY"</code></pre>
+    <div class="callout note" role="note"><p class="callout-title">Note</p><p>Listing models through the API needs a key with budget left. Before that, use the <a href="#/">My usage</a> page.</p></div>
     <h2 id="budget">Budget errors</h2>
     <p>When your Gemini budget is exhausted, the API rejects your requests with a budget error. After your group is funded, all members share one Gemini budget, so it runs out for every member at once.</p>
     <p>Check your remaining budget on <a href="#/">My usage</a> and <a href="#/group">My group</a>.</p>

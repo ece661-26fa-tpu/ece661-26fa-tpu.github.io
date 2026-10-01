@@ -67,7 +67,8 @@ export async function copyCode(button, code) {
   return copied;
 }
 
-function wrapCode(pre) {
+// Also used by pages.js for code blocks in the imported portal views.
+export function wrapCode(pre) {
   const block = el('div', 'code-block');
   const head = el('div', 'code-head');
   head.append(el('span', 'code-lang', pre.dataset.lang || 'Text'));

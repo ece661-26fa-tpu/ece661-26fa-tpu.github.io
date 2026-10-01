@@ -1,5 +1,5 @@
 import { API_ORIGIN } from './config.js';
-import { docsRoute, showDocs } from './docs.js';
+import { docsRoute, showDocs, wrapCode } from './docs.js';
 const status = document.getElementById('transport-status');
 const getRoutes = new Set(['/', '/me', '/ta', '/ta/export.csv', '/ta/compute.csv', '/group', '/ta/groups', '/ta/groups.csv']);
 const postRoutes = new Set(['/me', '/ta', '/ta/logout', '/ta/revoke', '/ta/reissue', '/group', '/group/logout', '/group/create', '/group/preview', '/group/join', '/group/leave', '/group/remove', '/group/rotate', '/group/split', '/ta/groups/lock', '/ta/groups/fund', '/ta/groups/split', '/ta/groups/move', '/ta/groups/remove', '/ta/groups/create', '/ta/groups/rotate', '/ta/groups/sync']);
@@ -16,6 +16,14 @@ function hashFor(path) {
   if (path.startsWith('/ta')) return '/ta';
   if (path.startsWith('/group')) return '/group';
   return '/';
+}
+// Highlight the masthead tab that owns this route.
+function markNav(route) {
+  const tab = docsRoute(route) ? '#/docs' : '#' + hashFor(route).replace('/ta/groups', '/ta');
+  for (const a of document.querySelectorAll('.masthead nav a')) {
+    if (a.getAttribute('href') === tab) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  }
 }
 function localPath(value) {
   const url = new URL(value, 'https://portal.internal');
@@ -58,10 +66,13 @@ function render(html) {
   main.classList.remove('reveal');
   document.body.classList.remove('docs-mode');
   document.getElementById('main').replaceWith(document.importNode(main, true));
+  // Code blocks get the docs label and Copy button. Wrapped after import so the listener stays.
+  for (const pre of document.getElementById('main').querySelectorAll('pre')) wrapCode(pre);
   document.title = doc.title || 'Course compute · ECE 661';
   document.getElementById('main').focus({preventScroll:true});
 }
 function go(route) {
+  markNav(route);
   const doc = docsRoute(route);
   if (doc) {
     showDocs(doc.path, doc.section);
@@ -105,6 +116,7 @@ async function send(method, path, form = {}) {
       else if (typeof result.html === 'string') {
         render(result.html);
         history.replaceState(null,'','#'+hashFor(path));
+        markNav(path);
       } else throw new Error('Unexpected portal response.');
       status.textContent='';
       return;

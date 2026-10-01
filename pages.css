@@ -1,9 +1,7 @@
-#transport-status{width:min(980px,calc(100% - 44px));margin:18px auto;font-size:14px;color:var(--secondary)}
+/* Pages site only: the bridge status line, skip link and busy state. Shared styles are in portal.css. */
+#transport-status{width:var(--frame);margin:18px auto 0;font-size:14px;color:var(--secondary)}
 #transport-status:empty{display:none}
 .skip-link{position:absolute;left:20px;top:-100px;z-index:30;background:var(--page);padding:8px 16px}
 .skip-link:focus{top:4px}
 main[aria-busy="true"]{opacity:.65}button:disabled{cursor:wait;opacity:.6}
 main[tabindex="-1"]:focus{outline:none}
-nav a{white-space:nowrap}
-@media (max-width:720px){nav{gap:14px}}
-@media (max-width:480px){.wordmark{white-space:nowrap;font-size:15px}.wordmark span{display:none}nav{gap:12px}.masthead>div{gap:12px}}
