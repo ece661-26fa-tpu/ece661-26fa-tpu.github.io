@@ -151,3 +151,5 @@ footer > div {
   .who small { white-space: normal; overflow-wrap: anywhere; }
   nav { gap: 18px; }
 }
+.join-code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; letter-spacing: 0.08em; }
+form.inline { display: inline-flex; align-items: center; gap: 6px; margin: 2px 8px 2px 0; }

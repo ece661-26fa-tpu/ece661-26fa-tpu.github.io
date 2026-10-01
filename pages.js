@@ -1,14 +1,22 @@
 import { API_ORIGIN } from './config.js';
+import { docsRoute, showDocs } from './docs.js';
 const status = document.getElementById('transport-status');
-const getRoutes = new Set(['/', '/me', '/ta', '/ta/export.csv', '/ta/compute.csv']);
-const postRoutes = new Set(['/me', '/ta', '/ta/logout', '/ta/revoke', '/ta/reissue']);
-let session = ''; // Expiring TA session. Never use cookies, URL parameters, or browser storage.
+const getRoutes = new Set(['/', '/me', '/ta', '/ta/export.csv', '/ta/compute.csv', '/group', '/ta/groups', '/ta/groups.csv']);
+const postRoutes = new Set(['/me', '/ta', '/ta/logout', '/ta/revoke', '/ta/reissue', '/group', '/group/logout', '/group/create', '/group/preview', '/group/join', '/group/leave', '/group/remove', '/group/rotate', '/group/split', '/ta/groups/lock', '/ta/groups/fund', '/ta/groups/split', '/ta/groups/move', '/ta/groups/remove', '/ta/groups/create', '/ta/groups/rotate', '/ta/groups/sync']);
+// Docs pages (#/docs/...) are built into this site by docs.js. They never call the bridge and are not in the allowlist.
+let session = ''; // Expiring TA or group session. Never use cookies, URL parameters, or browser storage.
 let busy = false;
 let requestEpoch = 0;
 let activeRequest = null;
 const origin = new URL(API_ORIGIN).origin;
 
-function routeFromHash() { const p = location.hash.slice(1) || '/'; return getRoutes.has(p) ? p : '/'; }
+function routeFromHash() { const p = location.hash.slice(1) || '/'; return getRoutes.has(p) || docsRoute(p) ? p : '/'; }
+function hashFor(path) {
+  if (path.startsWith('/ta/groups')) return '/ta/groups';
+  if (path.startsWith('/ta')) return '/ta';
+  if (path.startsWith('/group')) return '/group';
+  return '/';
+}
 function localPath(value) {
   const url = new URL(value, 'https://portal.internal');
   if (!['https://portal.internal', origin].includes(url.origin) || url.search || url.hash) return null;
@@ -41,12 +49,24 @@ function render(html) {
       const hint=form.querySelector('.hint');
       if (hint) hint.textContent='TA access lasts up to eight hours in this tab. Reloading signs you out. Your API key is not saved.';
     }
+    if (path === '/group') {
+      const hint=form.querySelector('.hint');
+      if (hint) hint.textContent='The group page stays open for up to two hours in this tab. Reloading signs you out. Your API key is not saved.';
+    }
   }
   main.tabIndex = -1;
   main.classList.remove('reveal');
+  document.body.classList.remove('docs-mode');
   document.getElementById('main').replaceWith(document.importNode(main, true));
   document.title = doc.title || 'Course compute · ECE 661';
   document.getElementById('main').focus({preventScroll:true});
+}
+function go(route) {
+  const doc = docsRoute(route);
+  if (doc) {
+    showDocs(doc.path, doc.section);
+    status.textContent = '';
+  } else send('GET', route);
 }
 function download(name, text) {
   const url = URL.createObjectURL(new Blob([text], {type:'text/csv;charset=utf-8'}));
@@ -64,7 +84,7 @@ async function send(method, path, form = {}) {
   status.textContent='Loading…';
   document.getElementById('main').setAttribute('aria-busy','true');
   document.querySelectorAll('button').forEach(b=>b.disabled=true);
-  if (path === '/ta' && method === 'POST') session='';
+  if ((path === '/ta' || path === '/group') && method === 'POST') session='';
   try {
     for (let hop=0; hop<3; hop++) {
       const headers={'Content-Type':'application/json'};
@@ -84,7 +104,7 @@ async function send(method, path, form = {}) {
       if (result.download) download(result.download,result.text);
       else if (typeof result.html === 'string') {
         render(result.html);
-        history.replaceState(null,'','#'+(path.startsWith('/ta') ? '/ta' : '/'));
+        history.replaceState(null,'','#'+hashFor(path));
       } else throw new Error('Unexpected portal response.');
       status.textContent='';
       return;
@@ -116,9 +136,12 @@ document.addEventListener('click',event=>{
   const route=a.dataset.route || (a.getAttribute('href')?.startsWith('#/') ? a.getAttribute('href').slice(1) : null);
   if (!route) return;
   event.preventDefault();
-  if (!busy) send('GET',route);
+  if (busy) return;
+  // Docs links add a history entry so Back works between docs pages. hashchange then stays quiet.
+  if (docsRoute(route) && location.hash !== '#'+route) history.pushState(null,'','#'+route);
+  go(route);
 });
-window.addEventListener('hashchange',()=>{ if (!busy) send('GET',routeFromHash()); });
+window.addEventListener('hashchange',()=>{ if (!busy) go(routeFromHash()); });
 window.addEventListener('pagehide',()=>{ requestEpoch++; activeRequest?.abort(); activeRequest=null; busy=false; session=''; document.getElementById('main').replaceChildren(); });
-window.addEventListener('pageshow',event=>{ if (event.persisted) send('GET',routeFromHash()); });
-send('GET',routeFromHash());
+window.addEventListener('pageshow',event=>{ if (event.persisted) go(routeFromHash()); });
+go(routeFromHash());
