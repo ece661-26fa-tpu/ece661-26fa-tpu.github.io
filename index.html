@@ -82,7 +82,7 @@ ece661 compute start --shape v6e-1 --hours 4</code></pre>
         <tr><td><a href="#/docs/api">Course API</a></td><td>Base URL, endpoints, and code examples</td></tr>
         <tr><td><a href="#/docs/cli">ece661 command</a></td><td>Install, sign in, and the command reference</td></tr>
         <tr><td><a href="#/docs/tpu">TPU sessions</a></td><td>Start, connect, limits, and idle cleanup</td></tr>
-        <tr><td><a href="#/docs/groups">Project groups and credit</a></td><td>Form a group and split its credit</td></tr>
+        <tr><td><a href="#/docs/groups">Project groups and credit</a></td><td>Register a group on Canvas and split its credit</td></tr>
         <tr><td><a href="#/docs/troubleshooting">Troubleshooting</a></td><td>Common errors and what to do</td></tr>
         <tr><td><a href="#/docs/help">Getting help</a></td><td>Who to contact and what to send</td></tr>
       </tbody>
@@ -237,7 +237,7 @@ ece661 compute stop &lt;id&gt;</code></pre>
   <template id="doc-groups">
     <p class="docs-kicker">Guides</p>
     <h1>Project groups and credit</h1>
-    <p class="docs-intro">Your project credit belongs to your project group. You set up the group on the <a href="#/group">My group</a> page.</p>
+    <p class="docs-intro">Your project credit belongs to your project group. You register the group on Canvas and set its credit split on the <a href="#/group">My group</a> page.</p>
     <h2 id="summary">At a glance</h2>
     <div class="table-scroll"><table>
       <thead><tr><th scope="col">Item</th><th scope="col">Value</th></tr></thead>
@@ -245,27 +245,33 @@ ece661 compute stop &lt;id&gt;</code></pre>
         <tr><td>Group size</td><td>1 to 4 members</td></tr>
         <tr><td>Google credit</td><td><span data-docs="credit">$250</span> per group</td></tr>
         <tr><td>Split</td><td>Gemini API and TPU compute, in $10 steps</td></tr>
-        <tr><td>Registration closes</td><td><span data-docs="deadline">[TBD]</span></td></tr>
+        <tr><td>Canvas group deadline</td><td><span data-docs="canvas-deadline">[TBD]</span></td></tr>
+        <tr><td>Split deadline</td><td><span data-docs="deadline">[TBD]</span></td></tr>
         <tr><td>Nebius credit</td><td>$200 per student, pooled in the group</td></tr>
       </tbody>
     </table></div>
-    <h2 id="form">Form a group</h2>
-    <p>Open <a href="#/group">My group</a> and sign in with your course key.</p>
+    <h2 id="steps">Steps</h2>
     <ol class="docs-steps">
-      <li><p>One member creates the group and gets a join code. The code is shown only once, so copy it. The owner can make a new code with Rotate join code.</p></li>
-      <li><p>Share the code with your teammates. Each teammate enters it, checks the group name and members, and joins.</p></li>
-      <li><p>Split your group's <span data-docs="credit">$250</span> of Google credit between the Gemini API and TPU compute, in $10 steps. Any member can change the split.</p></li>
+      <li><p>On Canvas, go to People, then Project Group, and join a group by <span data-docs="canvas-deadline">[TBD]</span>. A student working alone joins a group alone.</p></li>
+      <li><p>After the Canvas deadline, the TAs copy the Canvas groups to this site and email your course key.</p></li>
+      <li><p>Open <a href="#/group">My group</a>, sign in with your course key, and set your split by <span data-docs="deadline">[TBD]</span>.</p></li>
+      <li><p>A TA then funds the groups. Your credit is active from that point.</p></li>
     </ol>
-    <h2 id="deadline">Registration deadline</h2>
-    <p>Registration closes on <span data-docs="deadline">[TBD]</span>. Until then, members can leave, and the owner can remove a member. After that, the group is locked and only a TA can change it.</p>
-    <div class="callout warning" role="note"><p class="callout-title">Warning</p><p>If you are not in a group when registration closes, you have no project credit. Ask a TA to add you to a group.</p></div>
+    <h2 id="canvas">Register on Canvas</h2>
+    <p>Canvas decides who is in which group. You cannot create, join, or leave a group on My group.</p>
+    <p>To change your group before the Canvas deadline, change it on Canvas. After the deadline, ask a TA.</p>
+    <div class="callout warning" role="note"><p class="callout-title">Warning</p><p>If you are not in a Canvas group by the Canvas deadline, you have no project credit. Ask a TA to add you to a group.</p></div>
+    <h2 id="split">Set your split</h2>
+    <p>Split your group's <span data-docs="credit">$250</span> of Google credit between the Gemini API and TPU compute, in $10 steps.</p>
+    <p>Any member can change the split until the split deadline. If a teammate saves first, reload the page and try again.</p>
+    <p>After the split deadline, the group is locked and only a TA can change it.</p>
     <h2 id="using-credit">Using the credit</h2>
     <ul>
       <li>Every member calls the API with their own course key. All members spend from one shared group Gemini budget.</li>
       <li>TPU sessions draw on the group's TPU share.</li>
       <li>My group shows what the group has spent and what is left in each part.</li>
     </ul>
-    <p>If your group needs a different split after registration closes, ask a TA.</p>
+    <p>If your group needs a different split after the split deadline, ask a TA.</p>
     <h2 id="nebius">Nebius</h2>
     <p>Each student also gets $200 of Nebius credit, pooled in the group. My group records how your group plans to split it between Nebius APIs and GPU compute. Details will follow.</p>
   </template>
@@ -293,7 +299,7 @@ ece661 ssh-key add ~/.ssh/id_ed25519.pub</code></pre>
     <p><strong>Fix.</strong> Stop sessions you no longer need with <code>ece661 compute stop &lt;id&gt;</code>. Ask for fewer hours. Check what is left on <a href="#/group">My group</a>.</p>
     <h2 id="budget-error">The API returns a budget error</h2>
     <p><strong>Cause.</strong> Your Gemini budget is depleted. Once your group receives funding, this affects every member at once because you share one Gemini budget.</p>
-    <p><strong>Fix.</strong> Check <a href="#/">My usage</a> and <a href="#/group">My group</a>. If your group needs a different split after registration closes, ask a TA.</p>
+    <p><strong>Fix.</strong> Check <a href="#/">My usage</a> and <a href="#/group">My group</a>. If your group needs a different split after the split deadline, ask a TA.</p>
     <h2 id="session-gone">My session is gone</h2>
     <p><strong>Cause.</strong> The session ran out of hours or remained idle for 30 minutes. The machine and its disk were deleted.</p>
     <p><strong>Fix.</strong> Start a new session. Keep checkpoints in <code>/mnt/group</code> so the next session can use them. See <a href="#/docs/tpu#idle">Idle cleanup</a>.</p>
@@ -306,7 +312,7 @@ ece661 ssh-key add ~/.ssh/id_ed25519.pub</code></pre>
   <template id="doc-help">
     <p class="docs-kicker">Support</p>
     <h1>Getting help</h1>
-    <p class="docs-intro">Send Yueqian Lin a direct message on Slack.</p>
+    <p class="docs-intro">Email the TAs at ece661-26fa-tas@duke.edu.</p>
     <h2 id="what-to-send">What to include</h2>
     <ul>
       <li>The command you ran</li>
@@ -314,7 +320,7 @@ ece661 ssh-key add ~/.ssh/id_ed25519.pub</code></pre>
       <li>The session ID from <code>ece661 compute list</code>, if the problem is about a session</li>
     </ul>
     <h2 id="key-safety">Keep your key private</h2>
-    <div class="callout warning" role="note"><p class="callout-title">Warning</p><p>Never send your course key, not even to a TA. If you think your key has leaked, send Yueqian Lin a direct message on Slack right away so it can be replaced.</p></div>
+    <div class="callout warning" role="note"><p class="callout-title">Warning</p><p>Never send your course key, not even to a TA. If you think your key has leaked, email the TAs at ece661-26fa-tas@duke.edu right away so it can be replaced.</p></div>
   </template>
   <script type="module" src="./pages.js"></script>
 </body>

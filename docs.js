@@ -1,6 +1,6 @@
 // Documentation pages (#/docs/...). Each page is a <template> in index.html, shown inside the
 // docs-shell template. Nothing here makes a request. Never add fetch or the bridge to this file.
-import { API_ORIGIN, GROUP_CREDIT_USD, REGISTRATION_DEADLINE } from './config.js';
+import { API_ORIGIN, CANVAS_GROUP_DEADLINE, GROUP_CREDIT_USD, REGISTRATION_DEADLINE } from './config.js';
 
 // [route, template id, title], in sidebar order.
 export const DOCS = [
@@ -37,7 +37,7 @@ function link(href, text) {
 }
 
 function fill(root) {
-  const values = {origin: new URL(API_ORIGIN).origin, credit: '$' + GROUP_CREDIT_USD, deadline: REGISTRATION_DEADLINE};
+  const values = {origin: new URL(API_ORIGIN).origin, credit: '$' + GROUP_CREDIT_USD, deadline: REGISTRATION_DEADLINE, 'canvas-deadline': CANVAS_GROUP_DEADLINE};
   for (const node of root.querySelectorAll('[data-docs]')) {
     if (values[node.dataset.docs] !== undefined) node.textContent = values[node.dataset.docs];
   }
