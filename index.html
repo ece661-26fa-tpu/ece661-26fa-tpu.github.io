@@ -172,7 +172,7 @@ ece661 ssh-key add ~/.ssh/id_ed25519.pub</code></pre>
         <tr><td><code>ece661 login --key-file PATH</code></td><td>Reads the key from a file if you saved it to one</td></tr>
         <tr><td><code>ece661 logout</code></td><td>Removes the saved key from this computer</td></tr>
         <tr><td><code>ece661 ssh-key add [PATH]</code></td><td>Registers an SSH public key. PATH defaults to <code>~/.ssh/id_ed25519.pub</code>.</td></tr>
-        <tr><td><code>ece661 compute start</code></td><td>Starts a TPU session. See the flags below.</td></tr>
+        <tr><td><code>ece661 compute start</code></td><td>Starts a TPU session, or a GPU session with <code>--gpu</code>. See the flags below.</td></tr>
         <tr><td><code>ece661 compute list</code></td><td>Lists your sessions</td></tr>
         <tr><td><code>ece661 compute stop ID</code></td><td>Stops a session</td></tr>
         <tr><td><code>ece661 update</code></td><td>Installs the newest version of the command</td></tr>
@@ -186,6 +186,7 @@ ece661 ssh-key add ~/.ssh/id_ed25519.pub</code></pre>
       <tbody>
         <tr><td><code>--shape</code></td><td><code>v6e-1</code></td><td>Machine shape. <code>v6e-1</code> is one TPU v6e chip.</td></tr>
         <tr><td><code>--hours</code></td><td><code>24</code></td><td>Session length, from 1 to 168 hours. Always set it.</td></tr>
+        <tr><td><code>--gpu [SHAPE]</code></td><td>Off</td><td>Starts a Nebius GPU machine instead of a TPU. SHAPE defaults to <code>l40s-1</code>. Needs version 0.1.6 or newer.</td></tr>
         <tr><td><code>-y</code>, <code>--yes</code></td><td>Off</td><td>Reserves without the confirmation prompt</td></tr>
       </tbody>
     </table></div>
@@ -273,7 +274,27 @@ ece661 compute stop &lt;id&gt;</code></pre>
     </ul>
     <p>If your group needs a different split after the split deadline, ask a TA.</p>
     <h2 id="nebius">Nebius</h2>
-    <p>Each student also gets $200 of Nebius credit, pooled in the group. My group records how your group plans to split it between Nebius APIs and GPU compute. Details will follow.</p>
+    <p>Each student also gets $200 of Nebius credit, pooled in the group. On My group, your group splits it between Nebius APIs and GPU compute in 10% steps. GPU sessions draw on the GPU compute part.</p>
+    <h2 id="gpu">GPU sessions</h2>
+    <p>Run <code>ece661 update</code> first. GPU sessions need version 0.1.6 or newer. Then start a GPU machine for 4 hours:</p>
+    <pre data-lang="Shell"><code>ece661 compute start --gpu --hours 4</code></pre>
+    <p>As with TPUs, the command displays the cost and your group's remaining GPU balance before it reserves anything. If the reservation cost is $1 or more, it asks <code>Reserve it? [y/N]</code>. Enter <code>y</code> to start. Choose the shape with <code>--gpu</code> itself, for example <code>--gpu h100-1</code>, not with <code>--shape</code>.</p>
+    <p>The command prints an SSH command when the machine has an address. If it does not print one, run <code>ece661 compute list</code> a minute later. List and stop GPU sessions with <code>ece661 compute list</code> and <code>ece661 compute stop &lt;id&gt;</code>.</p>
+    <div class="table-scroll"><table>
+      <thead><tr><th scope="col">Shape</th><th scope="col">Machine</th><th scope="col">Rate</th></tr></thead>
+      <tbody>
+        <tr><td><code>l40s-1</code> (default)</td><td>One NVIDIA L40S, 48 GB</td><td>$1.55 per hour</td></tr>
+        <tr><td><code>h100-1</code></td><td>One NVIDIA H100, 80 GB</td><td>$4.70 per hour</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>Idle cleanup, the boot grace period and the session length limits are the same as for TPU sessions.</li>
+      <li>TPU and GPU sessions count together toward the limit of 2 open sessions.</li>
+      <li>The machines run in the Nebius eu-north1 region (Finland). CUDA and the NVIDIA driver are already installed.</li>
+      <li>Your group bucket is mounted at <code>/mnt/group</code>. Reading it from Nebius is slower than on a TPU machine, so copy datasets to the local disk once per session.</li>
+      <li>The machine's disk is deleted with the machine. Save checkpoints to <code>/mnt/group</code>.</li>
+      <li>If every GPU machine is in use, the command says all GPU slots are busy. Try again later.</li>
+    </ul>
   </template>
 
   <template id="doc-troubleshooting">
